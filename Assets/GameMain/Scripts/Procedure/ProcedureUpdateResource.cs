@@ -120,7 +120,7 @@ namespace StarForce
             return string.Format("{0} GB", (length / 1024f / 1024f / 1024f).ToString("F2"));
         }
 
-        private void OnCheckResourcesComplete(int removedCount, int updateCount, long updateTotalLength, long updateTotalZipLength)
+        private void OnCheckResourcesComplete(int movedCount, int removedCount, int updateCount, long updateTotalLength, long updateTotalZipLength)
         {
             Log.Info("Check resources complete, '{0}' resources need to update, zip length is '{1}', unzip length is '{2}'.", updateCount.ToString(), updateTotalZipLength.ToString(), updateTotalLength.ToString());
 

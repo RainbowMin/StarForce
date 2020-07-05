@@ -168,7 +168,7 @@ namespace StarForce
                 return;
             }
 
-            Log.Info("Latest game version is '{0}', local game version is '{1}'.", m_VersionInfo.LatestGameVersion, Version.GameVersion);
+            Log.Info("Latest game version is '{0} ({1})', local game version is '{2} ({3})'.", m_VersionInfo.LatestGameVersion, m_VersionInfo.InternalGameVersion, Version.GameVersion, Version.InternalGameVersion);
 
             if (m_VersionInfo.ForceGameUpdate)
             {
@@ -187,7 +187,6 @@ namespace StarForce
             }
 
             GameEntry.Resource.UpdatePrefixUri = Utility.Path.GetRegularPath(Path.Combine(m_VersionInfo.GameUpdateUrl, GetResourceVersionName(), GetPlatformPath()));
-
             UpdateVersion();
         }
 
