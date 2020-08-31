@@ -1,0 +1,42 @@
+@startuml
+[*] --> Launch
+Launch --> Splash
+Launch : 1.初始化构建信息（BuiltinDataComponent）;
+Launch : 2.语言配置：设置当前使用的语言（LocalizationComponent）;
+Launch : 3.变体配置：根据使用的语言，通知底层加载对应的资源变体（GameEntry.Resource.SetCurrentVariant）;
+Launch : 4.画质配置;
+Launch : 5.声音配置;
+Launch : 6.初始化默认字典:此字典文件记录了资源更新前使用的各种语言的字符串，会随 App 一起发布，故不可更新。
+
+Splash --> CheckVersion : [编辑器模式]
+Splash --> Preload : [非编辑器模式]
+Splash: 增加一个 Splash 动画，这里先跳过
+
+CheckVersion:1.请求版本校验GameEntry.WebRequest.AddWebRequest(GameEntry.BuiltinData.BuildInfo.CheckVersionUrl）
+CheckVersion:2.确认需要更新后Application.OpenURL(versionInfo.GameUpdateUrl)         
+note left of CheckVersion : ？？？弹出更新ui后没有设置m_InitResourcesComplete，怎么跳转流程的
+
+CheckVersion --> Preload
+
+Preload:LoadConfig  GameEntry.Config.ReadData("DefaultConfig")
+Preload:LoadDataTable GameEntry.DataTable.LoadDataTable
+Preload:LoadDictionary  GameEntry.Localization.ReadData
+Preload:LoadFont  GameEntry.Resource.LoadAsset
+
+Preload --> ChangeScene
+
+ChangeScene:停止所有声音  GameEntry.Sound.StopAllLoadingSounds();GameEntry.Sound.StopAllLoadedSounds();
+ChangeScene:隐藏所有实体  GameEntry.Entity.HideAllLoadedEntities();GameEntry.Entity.HideAllLoadingEntities()
+ChangeScene:卸载所有场景  GameEntry.Scene.UnloadScene
+ChangeScene:还原游戏速度  GameEntry.Base.ResetNormalGameSpeed()
+ChangeScene:加载下一个场景  GameEntry.Scene.LoadScene
+
+ChangeScene --> Menu : [回到菜单]
+ChangeScene --> Main : [不回到菜单]
+Menu:打开菜单UI
+Menu --> ChangeScene : [点击了开始按钮]
+
+Main --> ChangeScene : [GameOver]
+Main:OnUpdate:m_CurrentGame.Update
+
+@enduml
